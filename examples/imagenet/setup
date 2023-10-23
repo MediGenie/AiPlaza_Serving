@@ -1,0 +1,4 @@
+#!/bin/bash
+set -euo pipefail
+
+pip install timm==0.9.7
