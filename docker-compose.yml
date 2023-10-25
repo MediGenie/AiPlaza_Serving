@@ -38,7 +38,7 @@ services:
   web: &web
     image: aiserving:latest
     build: .
-    command: uvicorn ai_serving.main:app --host 127.0.0.1 --port 8000
+    command: uvicorn ai_serving.main:app --host 127.0.0.1 --port 80
     networks:
       - internal
       - external
