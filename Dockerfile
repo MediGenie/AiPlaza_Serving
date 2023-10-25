@@ -1,3 +1,10 @@
+FROM node:16 as frontend
+
+WORKDIR /app
+COPY ./mnist /app
+RUN yarn install && yarn build
+
+
 FROM python:3.10
 
 WORKDIR /app
@@ -12,3 +19,6 @@ RUN poetry config virtualenvs.create false \
 
 # Copy source code
 COPY . .
+
+#Copy frontend
+COPY --from=frontend /app/build /app/mnist/build
