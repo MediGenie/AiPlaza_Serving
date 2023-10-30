@@ -107,7 +107,13 @@ class ModelWorker:
         sock.sendall(msg)
 
         # TODO: Handle large files
-        resp, arg = sock.recv(1000000).split(common.SEPARATOR, 1)
+        try:
+            resp, arg = sock.recv(1000000).split(common.SEPARATOR, 1)
+        except ConnectionResetError:
+            # Check error.txt
+            with open(os.path.join(self.venv_dir, 'error.txt'), 'r') as f:
+                error = f.read()
+            raise RuntimeError(error)
 
         os.unlink(local_argument_path)
 
@@ -208,7 +214,7 @@ class ModelWorker:
     def socket_path(self):
         return os.path.join(
             self.venv_dir,
-            'ais.sock',
+            common.SOCK_NAME,
         )
 
     @property

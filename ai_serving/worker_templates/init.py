@@ -23,7 +23,14 @@ sock.listen(1)
 
 # Load & Initialise model
 from model.main import inference, load, postprocess, preprocess
-load()
+try:
+    load()
+except Exception as e:
+    # Write the error to file
+    with open('error.txt', 'w') as f:
+        tb = traceback.format_exc()
+        f.write(tb)
+    raise e
 
 
 # Change working directory because the model expects to be in the model directory
