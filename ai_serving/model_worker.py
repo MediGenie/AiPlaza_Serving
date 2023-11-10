@@ -104,16 +104,19 @@ class ModelWorker:
 
         msg = common.CMD_PREPROCESS + common.SEPARATOR + local_argument_path.encode()
 
-        sock.sendall(msg)
-
         # TODO: Handle large files
         try:
+            sock.sendall(msg)
             resp, arg = sock.recv(1000000).split(common.SEPARATOR, 1)
-        except ConnectionResetError:
-            # Check error.txt
-            with open(os.path.join(self.venv_dir, 'error.txt'), 'r') as f:
-                error = f.read()
-            raise RuntimeError(error)
+        except Exception as e:
+            error_path = os.path.join(self.venv_dir, 'error.txt')
+            if os.path.exists(error_path):
+                # Check error.txt
+                with open(os.path.join(self.venv_dir, 'error.txt'), 'r') as f:
+                    error = f.read()
+                raise RuntimeError(error)
+            else:
+                raise e
 
         os.unlink(local_argument_path)
 
